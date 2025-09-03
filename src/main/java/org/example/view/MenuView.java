@@ -2,6 +2,8 @@ package org.example.view;
 
 import org.example.controller.CalculadoraController;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MenuView {
@@ -18,14 +20,13 @@ public class MenuView {
     public void exibirMenu() {
         int opcao;
         do {
-            System.out.println("\n=== CALCULADORA MVC ===");
 
-            // Menu dinâmico baseado nas operações disponíveis
+            // Menu dinâmico
             for (int i = 0; i < operacoes.length; i++) {
-                System.out.println((i + 1) + ". " + capitalizar(operacoes[i]));
+                System.out.println((i + 1) + ". " + operacoes[i]);
             }
 
-            System.out.println((operacoes.length + 1) + ". Listar Operações (Reflection)");
+            System.out.println((operacoes.length + 1) + ". Listar Operações");
             System.out.println("0. Sair");
             System.out.print("Escolha: ");
 
@@ -40,7 +41,7 @@ public class MenuView {
             }
         } while (opcao != 0);
 
-        System.out.println("Calculadora encerrada. Até logo!");
+        System.out.println("Calculadora encerrada.");
         scanner.close();
     }
 
@@ -62,26 +63,24 @@ public class MenuView {
     }
 
     private void listarOperacoes() {
-        System.out.println("\n=== MÉTODOS DISPONÍVEIS (Reflection) ===");
         try {
-            // Usando Reflection para inspecionar a classe Model
-            Class<?> classeModel = Class.forName("com.exemplo.model.CalculadoraModel");
-            Method[] metodos = classeModel.getMethods();
+            Class<?> classeModel = Class.forName("org.example.model.CalculadoraModel");
+            Method[] metodos = classeModel.getDeclaredMethods();
 
+            List<String> listaOps = new ArrayList<>();
             for (Method metodo : metodos) {
-                if (metodo.getParameterCount() == 2 &&
-                        metodo.getParameterTypes()[0] == double.class &&
-                        metodo.getReturnType() == double.class) {
-                    System.out.println("- " + metodo.getName() + "(): " +
-                            metodo.getReturnType().getSimpleName());
-                }
+                listaOps.add(metodo.getName());
+            }
+
+            operacoes = listaOps.toArray(new String[0]); // atualiza as operações
+
+            for (String op : operacoes) {
+                System.out.println("- " + op);
             }
         } catch (Exception e) {
             System.out.println("Erro ao listar métodos: " + e.getMessage());
         }
     }
-
-    private String capitalizar(String texto) {
-        return texto.substring(0, 1).toUpperCase() + texto.substring(1);
-    }
 }
+
+

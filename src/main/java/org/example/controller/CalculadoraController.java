@@ -30,6 +30,7 @@ public class CalculadoraController {
             Method[] metodos = model.getClass().getMethods();
             java.util.List<String> operacoes = new java.util.ArrayList<>();
 
+
             for (Method metodo : metodos) {
                 if (metodo.getDeclaringClass() == model.getClass()) {//só pega os metodos da classe
                     operacoes.add(metodo.getName());
